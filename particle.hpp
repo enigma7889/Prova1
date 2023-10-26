@@ -14,13 +14,17 @@ class Particle {
   int fIndex;                 // index of fParticleType elements
   std::array<double, 3> fMomentum{{0, 0, 0}};
 
-  int FindParticle(char*);
+  static int FindParticle(const char*);
 
  public:
   Particle(char*, double, double, double);
 
   int getIndex() const;
-  // static void AddParticleType(char*, double, int, double);
+
+  void setIndex(int);
+  void setIndex(const char*);
+
+  static void AddParticleType(char*, double, int, double);
 };
 
 #endif
