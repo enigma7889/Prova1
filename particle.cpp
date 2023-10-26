@@ -1,6 +1,7 @@
 #include "particle.hpp"
 
 int Particle::FindParticle(char* name) {
+  /*
   int i{0};
   for (; i < fNParticleType; ++i) {             // reference not defined ...
     if (name == fParticleType[i]->getName()) {  // reference not defined ...
@@ -8,7 +9,9 @@ int Particle::FindParticle(char* name) {
     }
   }
   std::cout << "No corrispondence. New particle revealed" << '\n';
+
   return i;
+  */
 }
 
 Particle::Particle(char* name, double px, double py, double pz) {
