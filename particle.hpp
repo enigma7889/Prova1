@@ -12,19 +12,35 @@ class Particle {
   static std::array<ParticleType*, fMaxNumParticleType> fParticleType;
   static int fNParticleType;  // Non-null elements of fParticleType
   int fIndex;                 // index of fParticleType elements
-  std::array<double, 3> fMomentum{{0, 0, 0}};
+  std::array<double, 3> fMomentum;
 
   static int FindParticle(const char*);
 
  public:
   Particle(char*, double, double, double);
 
-  int getIndex() const;
+  int GetIndex() const;
+
+  double GetPx() const;
+  double GetPy() const;
+  double GetPz() const;
+
+  double GetMass() const;
+
+  double GetEnergy() const;
+
+  double InvMass(Particle&);
+
+  void SetP(double, double, double);
 
   void setIndex(int);
   void setIndex(const char*);
 
   static void AddParticleType(char*, double, int, double);
+
+  static void PrintParticleType();
+
+  void PrintParticle() const;
 };
 
 #endif

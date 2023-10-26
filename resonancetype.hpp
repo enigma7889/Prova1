@@ -11,7 +11,7 @@ class ResonanceType : public ParticleType {
   ResonanceType() = default;
   ResonanceType(const char*, const double, const int, const double);
 
-  double getWidth() const;
+  double GetWidth() const;
 
   void Print() const override;
 };
