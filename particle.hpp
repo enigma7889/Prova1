@@ -11,8 +11,8 @@ class Particle {
  private:
   static std::array<ParticleType*, fMaxNumParticleType> fParticleType;
   static int fNParticleType;  // Number of non-null elements of fParticleType
-  
-  int fIndex;                 // index of fParticleType elements
+
+  int fIndex;  // index of fParticleType elements
   std::array<double, 3> fMomentum;
 
   static int FindParticle(const char*);

@@ -45,8 +45,8 @@ double Particle::InvMass(Particle& P) {
 
 void Particle::SetP(double px, double py, double pz) {
   this->fMomentum[0] = px;
-  this->fMomentum[0] = py;
-  this->fMomentum[0] = pz;
+  this->fMomentum[1] = py;
+  this->fMomentum[2] = pz;
 }
 
 void Particle::SetIndex(int i) {
@@ -66,7 +66,6 @@ void Particle::SetIndex(const char* name) {
 void Particle::AddParticleType(char* name, double mass, int charge,
                                double width = 0) {
   int i = FindParticle(name);
-  std::cout << i << std::endl;
   if (i == (fNParticleType)) {
     ++fNParticleType;
     std::cout << "Number of Particles known increased : " << fNParticleType
@@ -74,9 +73,12 @@ void Particle::AddParticleType(char* name, double mass, int charge,
     if (fNParticleType > fMaxNumParticleType) {
       throw std::runtime_error("Maximum particle types number reached");
     }
-    fParticleType[i] = new ResonanceType(name, mass, charge, width);
+    if (width == 0) {
+      fParticleType[i] = new ParticleType(name, mass, charge);
+    } else {
+      fParticleType[i] = new ResonanceType(name, mass, charge, width);
+    }
   }
-  std::cout << std::endl;
 }
 
 void Particle::PrintParticleType() {
