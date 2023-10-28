@@ -10,16 +10,15 @@ int Particle::fNParticleType = 0;
 int Particle::FindParticle(const char* name) {
   int i{0};
   for (; i < fNParticleType; ++i) {
-    if (name == fParticleType[i]->GetName()) {
+    if (fParticleType[i]->GetName() == name) {
       return i;
     }
   }
   std::cout << "No corrispondence. New particle revealed" << '\n';
-
   return i;
 }
 
-Particle::Particle(char* name, double px, double py, double pz)
+Particle::Particle(const char* name, double px, double py, double pz)
     : fMomentum({px, py, pz}) {
   fIndex = FindParticle(name);
 }
@@ -30,9 +29,7 @@ double Particle::GetPx() const { return fMomentum[0]; }
 double Particle::GetPy() const { return fMomentum[1]; }
 double Particle::GetPz() const { return fMomentum[2]; }
 
-double Particle::GetMass() const {
-  return fParticleType[this->fIndex]->GetMass();
-}
+double Particle::GetMass() const { return fParticleType[fIndex]->GetMass(); }
 
 double Particle::GetEnergy() const {
   return std::sqrt(std::pow(this->GetMass(), 2) + std::pow(this->GetPx(), 2) +
@@ -52,12 +49,12 @@ void Particle::SetP(double px, double py, double pz) {
   this->fMomentum[0] = pz;
 }
 
-void Particle::setIndex(int i) {
+void Particle::SetIndex(int i) {
   assert(i < fNParticleType);
   this->fIndex = i;
 }
 
-void Particle::setIndex(const char* name) {
+void Particle::SetIndex(const char* name) {
   int i = FindParticle(name);
   if (i != fNParticleType) {
     this->fIndex = i;
@@ -69,15 +66,17 @@ void Particle::setIndex(const char* name) {
 void Particle::AddParticleType(char* name, double mass, int charge,
                                double width = 0) {
   int i = FindParticle(name);
-  if (i == fNParticleType) {
+  std::cout << i << std::endl;
+  if (i == (fNParticleType)) {
     ++fNParticleType;
+    std::cout << "Number of Particles known increased : " << fNParticleType
+              << '\n';
     if (fNParticleType > fMaxNumParticleType) {
       throw std::runtime_error("Maximum particle types number reached");
     }
-    ResonanceType R(name, mass, charge, width);
-    // ParticleType* P = &R;
-    fParticleType[i] = &R;
+    fParticleType[i] = new ResonanceType(name, mass, charge, width);
   }
+  std::cout << std::endl;
 }
 
 void Particle::PrintParticleType() {

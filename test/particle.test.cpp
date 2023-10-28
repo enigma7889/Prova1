@@ -4,4 +4,7 @@
 
 #include "doctest.h"
 
-TEST_CASE("Particle Class"){SUBCASE("Number equality"){CHECK(0 == 0);}};
+TEST_CASE("Particle Class") {
+
+  SUBCASE("Number equality") { CHECK(0 == 0); }
+};

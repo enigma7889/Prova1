@@ -10,14 +10,15 @@ static const int fMaxNumParticleType = 10;
 class Particle {
  private:
   static std::array<ParticleType*, fMaxNumParticleType> fParticleType;
-  static int fNParticleType;  // Non-null elements of fParticleType
+  static int fNParticleType;  // Number of non-null elements of fParticleType
+  
   int fIndex;                 // index of fParticleType elements
   std::array<double, 3> fMomentum;
 
   static int FindParticle(const char*);
 
  public:
-  Particle(char*, double, double, double);
+  Particle(const char*, double, double, double);
 
   int GetIndex() const;
 
@@ -33,8 +34,8 @@ class Particle {
 
   void SetP(double, double, double);
 
-  void setIndex(int);
-  void setIndex(const char*);
+  void SetIndex(int);
+  void SetIndex(const char*);
 
   static void AddParticleType(char*, double, int, double);
 
