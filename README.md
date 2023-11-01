@@ -2,9 +2,9 @@
 
 Prova 1 laboratorio secondo anno
 
-# Compilation
+# Compilation of Prova1 source
 
-Compile *only the library*:
+Compile *only the source*:
 ```
 cmake -S . -B build -DBUILD_TESTING=OFF
 cmake --build build
