@@ -63,7 +63,7 @@ void Particle::SetIndex(const char* name) {
   }
 }
 
-void Particle::AddParticleType(char* name, double mass, int charge,
+void Particle::AddParticleType(const char* name, double mass, int charge,
                                double width = 0) {
   int i = FindParticle(name);
   if (i == (fNParticleType)) {

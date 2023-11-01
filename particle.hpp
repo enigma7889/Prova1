@@ -17,6 +17,8 @@ class Particle {
 
   static int FindParticle(const char*);
 
+  void Boost(double bx, double by, double bz);
+
  public:
   Particle(const char*, double, double, double);
 
@@ -37,11 +39,13 @@ class Particle {
   void SetIndex(int);
   void SetIndex(const char*);
 
-  static void AddParticleType(char*, double, int, double);
+  static void AddParticleType(const char*, double, int, double);
 
   static void PrintParticleType();
 
   void PrintParticle() const;
+
+  int Decay2body(Particle &dau1,Particle &dau2) const;
 };
 
 #endif

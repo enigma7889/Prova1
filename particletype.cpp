@@ -7,6 +7,7 @@ ParticleType::ParticleType(const char* name_, const double mass_,
 const char* ParticleType::GetName() const { return fName; }
 double ParticleType::GetMass() const { return fMass; }
 int ParticleType::GetCharge() const { return fCharge; }
+double ParticleType::GetWidth() const { return 0; }
 
 void ParticleType::Print() const {
   std::cout << "The particle attributes are:" << '\n';
