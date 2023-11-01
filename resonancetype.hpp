@@ -8,7 +8,6 @@ class ResonanceType : public ParticleType {
   const double fWidth;
 
  public:
-  ResonanceType() = default;
   ResonanceType(const char*, const double, const int, const double);
 
   double GetWidth() const override;

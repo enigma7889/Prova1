@@ -1,4 +1,4 @@
-#include <particle.hpp>
+#include "particle.hpp"
 #include <cmath>
 #include <cstdlib> //for RAND_MAX
 

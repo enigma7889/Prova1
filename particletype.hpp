@@ -11,7 +11,6 @@ class ParticleType {
   const int fCharge;
 
  public:
-  ParticleType() = default;
   ParticleType(const char*, const double, const int);
 
   const char* GetName() const;

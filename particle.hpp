@@ -20,6 +20,7 @@ class Particle {
   void Boost(double bx, double by, double bz);
 
  public:
+  Particle() = default;
   Particle(const char*, double, double, double);
 
   int GetIndex() const;
