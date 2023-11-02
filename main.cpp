@@ -1,6 +1,15 @@
+#include <TFile.h>
+#include <TH1D.h>
+#include <TH2D.h>
+
 #include <cassert>
 #include <cmath>
 
+#include "TFile.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TROOT.h"
+#include "TRandom.h"
 #include "particle.hpp"
 
 int main() {
@@ -48,9 +57,9 @@ int main() {
       Particle P;                    // Particle j out of 100 of the i-th event
       Particle p1, p2;               // Possible daughters of a resonance particle
 
-      double phi = gRandom()->Uniform(0, 2 * M_PI);
-      double theta = gRandom()->Uniform(0, M_PI);
-      double impulse = gRandom()->Exp(1);  // module of momentum
+      double phi = gRandom->Uniform(0, 2 * M_PI);
+      double theta = gRandom->Uniform(0, M_PI);
+      double impulse = gRandom->Exp(1);  // module of momentum
 
       P.SetP(impulse * sin(theta) * cos(phi), impulse * sin(theta) * sin(phi), impulse * cos(theta));
 
@@ -209,7 +218,7 @@ int main() {
   //---------------------------------------------------
   // All histograms filled, particle generation finished
   //---------------------------------------------------
-  Tfile *file = new Tfile("HistogramsFile.root", "ReCreate");
+  TFile *file = new TFile("HistogramsFile.root", "ReCreate");
 
   ParticleTypeHisto->Write();
   AngleHisto->Write();
