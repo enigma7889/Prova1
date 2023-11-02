@@ -1,3 +1,4 @@
+#include <cassert>
 #include <cmath>
 
 #include "particle.hpp"
@@ -28,13 +29,24 @@ int main() {
   TH1D *InvMassNPPKHisto = new TH1D("NPPK", "InvMass Distribution between Negative Pion and Positive Kaon", 1000, 0, 10);
   TH1D *InvMassNPNKHisto = new TH1D("NPNK", "InvMass Distribution between Negative Pion and Negative Kaon", 1000, 0, 10);
 
+  TH1D *InvMassDecayDaughtersHisto = new TH1D("IMDDH", "InvMass Distribution between daughters of Decay", 50, 0, 10);
+
+  InvMassHisto->Sumw2();
+  InvMassDiscChargesHisto->Sumw2();
+  InvMassConcChargesHisto->Sumw2();
+  InvMassPPPKHisto->Sumw2();
+  InvMassPPNKHisto->Sumw2();
+  InvMassNPPKHisto->Sumw2();
+  InvMassNPNKHisto->Sumw2();
+  InvMassDecayDaughtersHisto->Sumw2();
+
   gRandom->SetSeed();
 
   for (int i{0}; i < 1.E5; ++i) {  // 10^5 Events
     NResonanceDaughters = 0;
     for (int j{0}; j < 1.E2; ++j) {  // 10^2 Particles per event
-      Particle P;                   // Particle j out of 100 of the i-th event
-      Particle p1, p2;              // Possible daughters of a resonance particle
+      Particle P;                    // Particle j out of 100 of the i-th event
+      Particle p1, p2;               // Possible daughters of a resonance particle
 
       double phi = gRandom()->Uniform(0, 2 * M_PI);
       double theta = gRandom()->Uniform(0, M_PI);
@@ -55,7 +67,7 @@ int main() {
         P.SetIndex("p+");
       else if (x < 0.99)
         P.SetIndex("p-");
-      else {
+      else {  // Resonance Case, Must Decay
         P.SetIndex("K*");
         P.Decay2body(p1, p2);
         double y = gRandom->Rndm();
@@ -66,10 +78,10 @@ int main() {
           p1.SetIndex("π-");
           p2.SetIndex("K+");
         }
+        EventParticles[100 + NResonanceDaughters] = p1;
         ++NResonanceDaughters;
-        EventParticles[99 + NResonanceDaughters] = p1;
+        EventParticles[100 + NResonanceDaughters] = p2;
         ++NResonanceDaughters;
-        EventParticles[99 + NResonanceDaughters] = p2;
       }
       EventParticles[j] = P;
 
@@ -139,7 +151,7 @@ int main() {
           }
         }
 
-        for (int k{99}; k < (99 + NResonanceDaughters); ++k) {  // this goes for the resonance daughters
+        for (int k{100}; k < (100 + NResonanceDaughters); ++k) {  // this goes for the resonance daughters
           double InvMass = EventParticles[j].InvMass(EventParticles[k]);
 
           InvMassHisto->Fill(InvMass);
@@ -180,9 +192,38 @@ int main() {
               break;
           }
         }
-
         // end of pion+/-/kaon+/- combinations
       }
     }
+
+    //--------------------------------------------------------------------
+    // Now we combine daughters of decay, ONLY AFTER THE EVENT IS FINISHED
+    //--------------------------------------------------------------------
+
+    for (int k{100}; k < (100 + NResonanceDaughters); k += 2) {
+      double InvMass = EventParticles[k].InvMass(EventParticles[k + 1]);
+
+      InvMassDecayDaughtersHisto->Fill(InvMass);
+    }
   }
+  //---------------------------------------------------
+  // All histograms filled, particle generation finished
+  //---------------------------------------------------
+  Tfile *file = new Tfile("HistogramsFile.root", "ReCreate");
+
+  ParticleTypeHisto->Write();
+  AngleHisto->Write();
+  ImpulseHisto->Write();
+  TrasverseImpulseHisto->Write();
+  EnergyHisto->Write();
+  InvMassHisto->Write();
+  InvMassDiscChargesHisto->Write();
+  InvMassConcChargesHisto->Write();
+  InvMassPPPKHisto->Write();
+  InvMassNPPKHisto->Write();
+  InvMassPPNKHisto->Write();
+  InvMassNPNKHisto->Write();
+  InvMassDecayDaughtersHisto->Write();
+
+  file->Close();
 }
