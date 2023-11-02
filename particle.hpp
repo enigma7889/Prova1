@@ -47,6 +47,8 @@ class Particle {
   void PrintParticle() const;
 
   int Decay2body(Particle &dau1,Particle &dau2) const;
+
+  int GetCharge() const;
 };
 
 #endif

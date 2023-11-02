@@ -96,3 +96,7 @@ void Particle::PrintParticle() const {
   std::cout << "Py : " << this->fMomentum[1] << '\n';
   std::cout << "Pz : " << this->fMomentum[2] << '\n' << '\n';
 }
+
+int Particle::GetCharge() const {
+  return this->fParticleType[this->fIndex]->GetCharge();
+}
