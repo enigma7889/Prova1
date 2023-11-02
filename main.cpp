@@ -3,60 +3,44 @@
 #include "particle.hpp"
 
 int main() {
-  Particle::AddParticleType("π+", 0.13957, +1, 0);
-  Particle::AddParticleType("π-", 0.13957, -1, 0);
-  Particle::AddParticleType("K+", 0.49367, +1, 0);
-  Particle::AddParticleType("K-", 0.49367, -1, 0);
-  Particle::AddParticleType("p+", 0.93827, +1, 0);
-  Particle::AddParticleType("p-", 0.93827, -1, 0);
-  Particle::AddParticleType("K*", 0.89166, 0, 0.05);
+  Particle::AddParticleType("π+", 0.13957, +1, 0);    // 0
+  Particle::AddParticleType("π-", 0.13957, -1, 0);    // 1
+  Particle::AddParticleType("K+", 0.49367, +1, 0);    // 2
+  Particle::AddParticleType("K-", 0.49367, -1, 0);    // 3
+  Particle::AddParticleType("p+", 0.93827, +1, 0);    // 4
+  Particle::AddParticleType("p-", 0.93827, -1, 0);    // 5
+  Particle::AddParticleType("K*", 0.89166, 0, 0.05);  // 6
 
   int NResonanceDaughters;
   Particle EventParticles[120];
 
-  TH1D *ParticleTypeHisto =
-      new TH1D("PTH", "Particle Types Distribution", 7, 0, 7);
-  TH2D *AngleHisto =
-      new TH2D("AH", "Angle of momentum Distribution", 1000, 0, 2 * M_PI, 1000,
-               0, M_PI);  // phi is x and theta is y
-  TH1D *ImpulseHisto =
-      new TH1D("IH", "Momentum Module Distribution", 1000, 0, 5);
-  TH1D *TrasverseImpulseHisto =
-      new TH1D("TIH", "Trasversal Momentum Module Distribution", 1000, 0, 4);
+  TH1D *ParticleTypeHisto = new TH1D("PTH", "Particle Types Distribution", 7, 0, 7);
+  TH2D *AngleHisto = new TH2D("AH", "Angle of momentum Distribution", 1000, 0, 2 * M_PI, 1000, 0, M_PI);  // phi is x and theta is y
+  TH1D *ImpulseHisto = new TH1D("IH", "Momentum Module Distribution", 1000, 0, 5);
+  TH1D *TrasverseImpulseHisto = new TH1D("TIH", "Trasversal Momentum Module Distribution", 1000, 0, 4);
   TH1D *EnergyHisto = new TH1D("EH", "Energy Distribution", 1000, 0, 4);
-  TH1D *InvMassHisto = new TH1D("IMH", "InvMass Distribution", 1000, 0,
-                                10);  // To adjust later...
-  TH1D *InvMassBetweenDiscChargesHisto = new TH1D(
-      "IMBDCH", "InvMass Distribution between discording charges", 1000, 0, 10);
-  TH1D *InvMassBetweenConcChargesHisto = new TH1D(
-      "IMBCCH", "InvMass Distribution between concording charges", 1000, 0, 10);
-  TH1D *InvMassBetweenPPNKHisto = new TH1D(
-      "PPNK", "InvMass Distribution between Positive Pion and Negative Kaon",
-      1000, 0, 10);
-  TH1D *InvMassBetweenNPPKHisto = new TH1D(
-      "NPPK", "InvMass Distribution between Negative Pion and Positive Kaon",
-      1000, 0, 10);
-  TH1D *InvMassBetweenPPPKHisto = new TH1D(
-      "PPPK", "InvMass Distribution between Positive Pion and Positive Kaon",
-      1000, 0, 10);
-  TH1D *InvMassBetweenNPNKHisto = new TH1D(
-      "NPNK", "InvMass Distribution between Negative Pion and Negative Kaon",
-      1000, 0, 10);
+  TH1D *InvMassHisto = new TH1D("IMH", "InvMass Distribution", 1000, 0, 10);  // To adjust later...
+  TH1D *InvMassDiscChargesHisto = new TH1D("IMBDCH", "InvMass Distribution between discording charges", 1000, 0, 10);
+  TH1D *InvMassConcChargesHisto = new TH1D("IMBCCH", "InvMass Distribution between concording charges", 1000, 0, 10);
+
+  TH1D *InvMassPPPKHisto = new TH1D("PPPK", "InvMass Distribution between Positive Pion and Positive Kaon", 1000, 0, 10);
+  TH1D *InvMassPPNKHisto = new TH1D("PPNK", "InvMass Distribution between Positive Pion and Negative Kaon", 1000, 0, 10);
+  TH1D *InvMassNPPKHisto = new TH1D("NPPK", "InvMass Distribution between Negative Pion and Positive Kaon", 1000, 0, 10);
+  TH1D *InvMassNPNKHisto = new TH1D("NPNK", "InvMass Distribution between Negative Pion and Negative Kaon", 1000, 0, 10);
 
   gRandom->SetSeed();
 
   for (int i{0}; i < 1.E5; ++i) {  // 10^5 Events
     NResonanceDaughters = 0;
-    for (int j{0}; j < 100; ++j) {  // 10^2 Particles per event
+    for (int j{0}; j < 1.E2; ++j) {  // 10^2 Particles per event
       Particle P;                   // Particle j out of 100 of the i-th event
-      Particle p1, p2;
+      Particle p1, p2;              // Possible daughters of a resonance particle
 
       double phi = gRandom()->Uniform(0, 2 * M_PI);
       double theta = gRandom()->Uniform(0, M_PI);
       double impulse = gRandom()->Exp(1);  // module of momentum
 
-      P.SetP(impulse * sin(theta) * cos(phi), impulse * sin(theta) * sin(phi),
-             impulse * cos(theta));
+      P.SetP(impulse * sin(theta) * cos(phi), impulse * sin(theta) * sin(phi), impulse * cos(theta));
 
       double x = gRandom->Rndm();
       if (x < 0.40)
@@ -89,7 +73,9 @@ int main() {
       }
       EventParticles[j] = P;
 
+      //---------------------------------
       // From here we fill the Histograms
+      //---------------------------------
 
       ParticleTypeHisto->Fill(P.GetIndex());
 
@@ -97,55 +83,105 @@ int main() {
 
       ImpulseHisto->Fill(impulse);
 
-      TrasverseImpulseHisto->Fill(
-          sqrt(pow(impulse * sin(theta) * cos(phi), 2) +
-               pow(impulse * sin(theta) * sin(phi),
-                   2)));  // sqrt of module in x and y of impluse (Not with z)
+      TrasverseImpulseHisto->Fill(sqrt(pow(impulse * sin(theta) * cos(phi), 2) + pow(impulse * sin(theta) * sin(phi),
+                                                                                     2)));  // module in x and y of impluse (Not with z)
 
       EnergyHisto->Fill(P.GetEnergy());
 
-      // Here we are discarding the case P is K*
-      if (EventParticles[j].GetIndex() != 6) {
-        // InvMass for all the particles of a single event Histogram Filling
+      if (EventParticles[j].GetIndex() != 6) {  // Here we are discarding the case P is K*
 
-        // this goes for the first non-empty part of the array
-        for (int k{0}; k < j; ++k) {
-          if (EventParticles[k].GetIndex() != 6) {  // Here we are excluding K*
+        //--------------------------------------------------------------
+        // InvMass for all the cases of a single event Histogram Filling
+        //--------------------------------------------------------------
+
+        for (int k{0}; k < j; ++k) {                // this goes for the first non-empty part of the array
+          if (EventParticles[k].GetIndex() != 6) {  // Here we are excluding K* particles
 
             double InvMass = EventParticles[j].InvMass(EventParticles[k]);
 
             InvMassHisto->Fill(InvMass);
 
-            if (EventParticles[k].GetCharge() !=
-                EventParticles[j].GetCharge()) {
-              InvMassBetweenDiscChargesHisto->Fill(InvMass);
-            }
+            if (EventParticles[k].GetCharge() != EventParticles[j].GetCharge())  // different charge
+              InvMassDiscChargesHisto->Fill(InvMass);
+            else  // same charge
+              InvMassConcChargesHisto->Fill(InvMass);
 
-            if (EventParticles[k].GetCharge() ==
-                EventParticles[j].GetCharge()) {
-              InvMassBetweenConcChargesHisto->Fill(InvMass);
+            switch (EventParticles[k].GetIndex()) {
+              case 0:                                     // pion+
+                if (EventParticles[j].GetIndex() == 2) {  // kaon+
+                  InvMassPPPKHisto->Fill(InvMass);
+                } else if (EventParticles[j].GetIndex() == 3) {  // kaon-
+                  InvMassPPNKHisto->Fill(InvMass);
+                }
+                break;
+              case 1:                                     // pion-
+                if (EventParticles[j].GetIndex() == 2) {  // kaon+
+                  InvMassNPPKHisto->Fill(InvMass);
+                } else if (EventParticles[j].GetIndex() == 3) {  // kaon-
+                  InvMassNPNKHisto->Fill(InvMass);
+                }
+                break;
+              case 2:                                     // kaon+
+                if (EventParticles[j].GetIndex() == 0) {  // pion+
+                  InvMassPPPKHisto->Fill(InvMass);
+                } else if (EventParticles[j].GetIndex() == 1) {  // pion-
+                  InvMassNPPKHisto->Fill(InvMass);
+                }
+                break;
+              case 3:                                     // kaon-
+                if (EventParticles[j].GetIndex() == 0) {  // pion+
+                  InvMassPPNKHisto->Fill(InvMass);
+                } else if (EventParticles[j].GetIndex() == 1) {  // pion-
+                  InvMassNPPKHisto->Fill(InvMass);
+                }
+                break;
             }
-
-            // PION+/PION-/KAON+/KAON-
           }
         }
 
-        // this goes for the resonance daughters
-        for (int k{99}; k < (99 + NResonanceDaughters); ++k) {
+        for (int k{99}; k < (99 + NResonanceDaughters); ++k) {  // this goes for the resonance daughters
           double InvMass = EventParticles[j].InvMass(EventParticles[k]);
 
           InvMassHisto->Fill(InvMass);
 
-          if (EventParticles[k].GetCharge() != EventParticles[j].GetCharge()) {
-            InvMassBetweenDiscChargesHisto->Fill(InvMass);
-          }
+          if (EventParticles[k].GetCharge() != EventParticles[j].GetCharge())  // different charge
+            InvMassDiscChargesHisto->Fill(InvMass);
+          else  // same charge
+            InvMassConcChargesHisto->Fill(InvMass);
 
-          if (EventParticles[k].GetCharge() == EventParticles[j].GetCharge()) {
-            InvMassBetweenConcChargesHisto->Fill(InvMass);
+          switch (EventParticles[k].GetIndex()) {
+            case 0:                                     // pion+
+              if (EventParticles[j].GetIndex() == 2) {  // kaon+
+                InvMassPPPKHisto->Fill(InvMass);
+              } else if (EventParticles[j].GetIndex() == 3) {  // kaon-
+                InvMassPPNKHisto->Fill(InvMass);
+              }
+              break;
+            case 1:                                     // pion-
+              if (EventParticles[j].GetIndex() == 2) {  // kaon+
+                InvMassNPPKHisto->Fill(InvMass);
+              } else if (EventParticles[j].GetIndex() == 3) {  // kaon-
+                InvMassNPNKHisto->Fill(InvMass);
+              }
+              break;
+            case 2:                                     // kaon+
+              if (EventParticles[j].GetIndex() == 0) {  // pion+
+                InvMassPPPKHisto->Fill(InvMass);
+              } else if (EventParticles[j].GetIndex() == 1) {  // pion-
+                InvMassNPPKHisto->Fill(InvMass);
+              }
+              break;
+            case 3:                                     // kaon-
+              if (EventParticles[j].GetIndex() == 0) {  // pion+
+                InvMassPPNKHisto->Fill(InvMass);
+              } else if (EventParticles[j].GetIndex() == 1) {  // pion-
+                InvMassNPPKHisto->Fill(InvMass);
+              }
+              break;
           }
-
-          // PION+/PION-/KAON+/KAON-
         }
+
+        // end of pion+/-/kaon+/- combinations
       }
     }
   }
