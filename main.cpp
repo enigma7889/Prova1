@@ -2,7 +2,6 @@
 #include <TH1D.h>
 #include <TH2D.h>
 
-#include <cassert>
 #include <cmath>
 
 #include "TFile.h"
@@ -10,6 +9,7 @@
 #include "TH2.h"
 #include "TROOT.h"
 #include "TRandom.h"
+
 #include "particle.hpp"
 
 int main() {
