@@ -37,7 +37,7 @@ int Main() {
   TH1D *InvMassNPPKHisto = new TH1D("NPPK", "InvMass Distribution between Negative Pion and Positive Kaon", 1000, 0, 10);
   TH1D *InvMassNPNKHisto = new TH1D("NPNK", "InvMass Distribution between Negative Pion and Negative Kaon", 1000, 0, 10);
 
-  TH1D *InvMassDecayDaughtersHisto = new TH1D("IMDDH", "InvMass Distribution between daughters of Decay", 50, 0, 10);
+  TH1D *InvMassDecayDaughtersHisto = new TH1D("IMDDH", "InvMass Distribution between daughters of Decay", 300, 0.6, 1.2);
 
   InvMassHisto->Sumw2();
   InvMassDiscChargesHisto->Sumw2();
@@ -63,26 +63,26 @@ int Main() {
 
       double x = gRandom->Rndm();
       if (x < 0.40)
-        P.SetIndex("π+");
+        P.SetIndex(0);
       else if (x < 0.80)
-        P.SetIndex("π-");
+        P.SetIndex(1);
       else if (x < 0.85)
-        P.SetIndex("K+");
+        P.SetIndex(2);
       else if (x < 0.90)
-        P.SetIndex("K-");
+        P.SetIndex(3);
       else if (x < 0.945)
-        P.SetIndex("p+");
+        P.SetIndex(4);
       else if (x < 0.99)
-        P.SetIndex("p-");
+        P.SetIndex(5);
       else {  // Resonance Case, Must Decay
-        P.SetIndex("K*");
+        P.SetIndex(6);
         double y = gRandom->Rndm();
         if (y < 0.5) {
-          p1.SetIndex("π+");
-          p2.SetIndex("K-");
+          p1.SetIndex(0);
+          p2.SetIndex(3);
         } else {
-          p1.SetIndex("π-");
-          p2.SetIndex("K+");
+          p1.SetIndex(1);
+          p2.SetIndex(2);
         }
         P.Decay2body(p1, p2);
         EventParticles[100 + NResonanceDaughters] = p1;
@@ -233,5 +233,6 @@ int Main() {
   InvMassDecayDaughtersHisto->Write();
 
   file->Close();
+
   return 0;
 }

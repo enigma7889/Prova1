@@ -30,6 +30,8 @@ Compile and execute on root:
 
 ```
 root -l -b -q Main.cpp+g
+root .L read.cpp+
+root read();
 
 ```
 
