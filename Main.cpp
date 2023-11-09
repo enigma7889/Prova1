@@ -9,10 +9,9 @@
 #include "TH2.h"
 #include "TROOT.h"
 #include "TRandom.h"
-
 #include "particle.hpp"
 
-int main() {
+int Main() {
   Particle::AddParticleType("π+", 0.13957, +1, 0);    // 0
   Particle::AddParticleType("π-", 0.13957, -1, 0);    // 1
   Particle::AddParticleType("K+", 0.49367, +1, 0);    // 2
@@ -50,7 +49,6 @@ int main() {
   InvMassDecayDaughtersHisto->Sumw2();
 
   gRandom->SetSeed();
-
   for (int i{0}; i < 1.E5; ++i) {  // 10^5 Events
     NResonanceDaughters = 0;
     for (int j{0}; j < 1.E2; ++j) {  // 10^2 Particles per event
@@ -78,7 +76,6 @@ int main() {
         P.SetIndex("p-");
       else {  // Resonance Case, Must Decay
         P.SetIndex("K*");
-        P.Decay2body(p1, p2);
         double y = gRandom->Rndm();
         if (y < 0.5) {
           p1.SetIndex("π+");
@@ -87,11 +84,13 @@ int main() {
           p1.SetIndex("π-");
           p2.SetIndex("K+");
         }
+        P.Decay2body(p1, p2);
         EventParticles[100 + NResonanceDaughters] = p1;
         ++NResonanceDaughters;
         EventParticles[100 + NResonanceDaughters] = p2;
         ++NResonanceDaughters;
       }
+
       EventParticles[j] = P;
 
       //---------------------------------
@@ -114,7 +113,6 @@ int main() {
         //--------------------------------------------------------------
         // InvMass for all the cases of a single event Histogram Filling
         //--------------------------------------------------------------
-
         for (int k{0}; k < j; ++k) {                // this goes for the first non-empty part of the array
           if (EventParticles[k].GetIndex() != 6) {  // Here we are excluding K* particles
 
@@ -235,4 +233,5 @@ int main() {
   InvMassDecayDaughtersHisto->Write();
 
   file->Close();
+  return 0;
 }

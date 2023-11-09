@@ -21,8 +21,16 @@ Code execution:
 
 ```
 cd build
-./main
+./particle.t
 
-Note: in the last line "main" may be changed with test programs and so on...
+Note: in the last line "" may be changed with test programs and so on...
 
 ```
+Compile and execute on root:
+
+```
+root -l -b -q Main.cpp+g
+
+```
+
+
