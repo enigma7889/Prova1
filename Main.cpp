@@ -26,16 +26,16 @@ int Main() {
   TH1D *ParticleTypeHisto = new TH1D("PTH", "Particle Types Distribution", 7, 0, 7);
   TH2D *AngleHisto = new TH2D("AH", "Angle of momentum Distribution", 1000, 0, 2 * M_PI, 1000, 0, M_PI);  // phi is x and theta is y
   TH1D *ImpulseHisto = new TH1D("IH", "Momentum Module Distribution", 1000, 0, 5);
-  TH1D *TrasverseImpulseHisto = new TH1D("TIH", "Trasversal Momentum Module Distribution", 1000, 0, 4);
-  TH1D *EnergyHisto = new TH1D("EH", "Energy Distribution", 1000, 0, 4);
-  TH1D *InvMassHisto = new TH1D("IMH", "InvMass Distribution", 1000, 0, 10);  // To adjust later...
-  TH1D *InvMassDiscChargesHisto = new TH1D("IMBDCH", "InvMass Distribution between discording charges", 1000, 0, 10);
-  TH1D *InvMassConcChargesHisto = new TH1D("IMBCCH", "InvMass Distribution between concording charges", 1000, 0, 10);
+  TH1D *TrasverseImpulseHisto = new TH1D("TIH", "Trasversal Momentum Module Distribution", 1000, 0, 3);
+  TH1D *EnergyHisto = new TH1D("EH", "Energy Distribution", 1000, 0, 3);
+  TH1D *InvMassHisto = new TH1D("IMH", "InvMass Distribution", 1000, 0, 6);
+  TH1D *InvMassDiscChargesHisto = new TH1D("IMBDCH", "InvMass Distribution between discording charges", 1000, 0, 6);
+  TH1D *InvMassConcChargesHisto = new TH1D("IMBCCH", "InvMass Distribution between concording charges", 1000, 0, 6);
 
-  TH1D *InvMassPPPKHisto = new TH1D("PPPK", "InvMass Distribution between Positive Pion and Positive Kaon", 1000, 0, 10);
-  TH1D *InvMassPPNKHisto = new TH1D("PPNK", "InvMass Distribution between Positive Pion and Negative Kaon", 1000, 0, 10);
-  TH1D *InvMassNPPKHisto = new TH1D("NPPK", "InvMass Distribution between Negative Pion and Positive Kaon", 1000, 0, 10);
-  TH1D *InvMassNPNKHisto = new TH1D("NPNK", "InvMass Distribution between Negative Pion and Negative Kaon", 1000, 0, 10);
+  TH1D *InvMassPPPKHisto = new TH1D("PPPK", "InvMass Distribution between Positive Pion and Positive Kaon", 1000, 0, 6);
+  TH1D *InvMassPPNKHisto = new TH1D("PPNK", "InvMass Distribution between Positive Pion and Negative Kaon", 1000, 0, 6);
+  TH1D *InvMassNPPKHisto = new TH1D("NPPK", "InvMass Distribution between Negative Pion and Positive Kaon", 1000, 0, 6);
+  TH1D *InvMassNPNKHisto = new TH1D("NPNK", "InvMass Distribution between Negative Pion and Negative Kaon", 1000, 0, 6);
 
   TH1D *InvMassDecayDaughtersHisto = new TH1D("IMDDH", "InvMass Distribution between daughters of Decay", 300, 0.6, 1.2);
 
