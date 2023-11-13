@@ -56,15 +56,26 @@ void read() {
   ++j;
   h[j] = (TH1D *)file->Get("IMBCCH");  // 6
   ++j;
-  h[j] = (TH1D *)file->Get("PPPK");  // 7
+  h[j] = (TH1D *)file->Get("PPPK");  // 7 concording
   ++j;
-  h[j] = (TH1D *)file->Get("PPNK");  // 8
+  h[j] = (TH1D *)file->Get("PPNK");  // 8 disc.
   ++j;
-  h[j] = (TH1D *)file->Get("NPPK");  // 9
+  h[j] = (TH1D *)file->Get("NPPK");  // 9 disc.
   ++j;
-  h[j] = (TH1D *)file->Get("NPNK");  // 10
+  h[j] = (TH1D *)file->Get("NPNK");  // 10 concording
   ++j;
   h[j] = (TH1D *)file->Get("IMDDH");  // 11
+
+  TH1D *hDC = new TH1D("HDC", "difference of discording and concording charges", 1000, 0, 6);
+  hDC->Add(h[5], h[6], 1, -1);
+
+  TH1D *hDCPK = new TH1D("HDCPK", "sum of discording pions and kaons", 1000, 0, 6);
+  hDCPK->Add(h[7], h[10]);
+  TH1D *hCCPK = new TH1D("HCCPK", "sum of concording pions and kaons", 1000, 0, 6);
+  hCCPK->Add(h[8], h[9]);
+
+  TH1D *hDPK = new TH1D("HDPK", "difference of discording and concording pions and kaons", 1000, 0, 6);
+  hDPK->Add(hDCPK, hCCPK, 1, -1);
 
   TH2D *h2D = (TH2D *)file->Get("AH");  // 2D Histogram (Angle dist.)
 
@@ -78,7 +89,7 @@ void read() {
   std::cout << ffU1->GetParameter(1) << " +/- " << ffU1->GetParError(1) << std::endl;
   std::cout << ffU1->GetProb() << std::endl << std::endl;
   */
- 
+
   //-----------------------------------------------------------
   //----------------Canvas-Creation----------------------------
   //-----------------------------------------------------------
@@ -108,7 +119,13 @@ void read() {
   }
 
   TCanvas *c4 = new TCanvas("c4", "c4", 10, 20, 1000, 600);
+  c4->Divide(2, 2);
+  c4->cd(1);
   h2D->DrawCopy();
+  c4->cd(2);
+  hDC->DrawCopy();
+  c4->cd(3);
+  hDPK->DrawCopy();
 
   c1->Print("canvas/myCanvas1.gif");
   c2->Print("canvas/myCanvas2.gif");
