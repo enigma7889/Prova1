@@ -27,19 +27,16 @@ int Main() {
   TH1D *TrasverseImpulseHisto = new TH1D("TIH", "Trasversal Momentum Module Distribution", 1000, 0, 3);
   TH1D *EnergyHisto = new TH1D("EH", "Energy Distribution", 1000, 0, 3);
   TH1D *InvMassHisto = new TH1D("IMH", "InvMass Distribution", 1000, 0, 6);
-  TH1D *InvMassDiscChargesHisto = new TH1D("IMBDCH", "InvMass Distribution between discording charges", 1000, 0, 6);
-  TH1D *InvMassConcChargesHisto = new TH1D("IMBCCH", "InvMass Distribution between concording charges", 1000, 0, 6);
-
-  TH1D *InvMassDPKHisto = new TH1D("DPKH", "InvMass Distribution between discording Pions and Kaons", 1000, 0, 6);
-  TH1D *InvMassCPKHisto = new TH1D("CPKH", "InvMass Distribution between concording Pions and Kaons", 1000, 0, 6);
-
-  TH1D *InvMassDecayDaughtersHisto = new TH1D("IMDDH", "InvMass Distribution between daughters of Decay", 100, 0.6, 1.2);
-
   InvMassHisto->Sumw2();
+  TH1D *InvMassDiscChargesHisto = new TH1D("IMBDCH", "InvMass Distribution between discording charges", 1000, 0, 6);
   InvMassDiscChargesHisto->Sumw2();
+  TH1D *InvMassConcChargesHisto = new TH1D("IMBCCH", "InvMass Distribution between concording charges", 1000, 0, 6);
   InvMassConcChargesHisto->Sumw2();
+  TH1D *InvMassDPKHisto = new TH1D("DPKH", "InvMass Distribution between discording Pions and Kaons", 1000, 0, 6);
   InvMassDPKHisto->Sumw2();
+  TH1D *InvMassCPKHisto = new TH1D("CPKH", "InvMass Distribution between concording Pions and Kaons", 1000, 0, 6);
   InvMassCPKHisto->Sumw2();
+  TH1D *InvMassDecayDaughtersHisto = new TH1D("IMDDH", "InvMass Distribution between daughters of Decay", 100, 0.6, 1.2);
   InvMassDecayDaughtersHisto->Sumw2();
 
   gRandom->SetSeed();
