@@ -27,17 +27,17 @@ void read() {
     h[j] = (TH1D *)file->Get(s[j]);
   }
 
-  TH1D *hDC = new TH1D("HDC", "difference of discording and concording charges", 1000, 0, 6);
-  // hDC->Sumw2();
-  hDC->Add(h[5], h[6], 1, -1);
-  h[10] = hDC;
+  TH1D *DiffDiscConcChargesHisto = new TH1D("DiffDiscConcChargesHisto", "difference of discording and concording charges", 1000, 0, 6);
+  DiffDiscConcChargesHisto->Sumw2();
+  DiffDiscConcChargesHisto->Add(h[5], h[6], 1, -1);
+  h[10] = DiffDiscConcChargesHisto;
 
-  TH1D *hDPK = new TH1D("HDPK", "difference of discording and concording pions and kaons", 1000, 0, 6);
-  // hDPK->Sumw2();
-  hDPK->Add(h[7], h[8], 1, -1);
-  h[11] = hDPK;
+  TH1D *DiffDiscConcPKHisto = new TH1D("DiffDiscConcPKHisto", "difference of discording and concording pions and kaons", 1000, 0, 6);
+  DiffDiscConcPKHisto->Sumw2();
+  DiffDiscConcPKHisto->Add(h[7], h[8], 1, -1);
+  h[11] = DiffDiscConcPKHisto;
 
-  TH2D *h2D = (TH2D *)file->Get("AH");  // 2D Histogram (Angle dist.)
+  TH2D *AngleDistHisto = (TH2D *)file->Get("AH");  // 2D Histogram (Angle dist.)
 
   //----------------------------------------
   //  Canvas Creation and function fitting
@@ -51,10 +51,10 @@ void read() {
   h[0]->Draw("E,P,SAME");
 
   c1->cd(2);
-  TF1 *f1 = new TF1("f1", "expo(0)", 0, 5);
-  f1->SetParameters(0, 1);
-  h[1]->Fit("f1");
-  TF1 *ff1 = h[1]->GetFunction("f1");
+  TF1 *ExpFunction = new TF1("ExpFunction", "expo(0)", 0, 5);
+  ExpFunction->SetParameters(0, 1);
+  h[1]->Fit("ExpFunction");
+  TF1 *ImpulseFitFunction = h[1]->GetFunction("ExpFunction");
   h[1]->Draw("H");
   h[1]->Draw("E,P,SAME");
 
@@ -91,27 +91,30 @@ void read() {
   TCanvas *c4 = new TCanvas("c4", "c4", 10, 20, 1000, 600);
   c4->Divide(2, 1);
 
-  for (int i{10}; i < 12; ++i) {
-    c4->cd(i - 10 + 1);
-    h[i]->Draw("H");
-    h[i]->Draw("E,P,SAME");
-  }
+  c4->cd(1);
+  TF1 *GaussianFunction1 = new TF1("GaussianFunction1", "gaus(0)", 0, 6);
+  GaussianFunction1->SetParameters(1, 0.89166, 0.05);
+  h[10]->Fit(GaussianFunction1);
+  TF1 *InvMassDiffChargesFitFunction = h[10]->GetFunction("GaussianFunction1");
+  h[10]->Draw("H");
+  h[10]->Draw("E,P,SAME");
+
+  c4->cd(2);
+  TF1 *GaussianFunction2 = new TF1("GaussianFunction2", "gaus(0)", 0, 6);
+  GaussianFunction2->SetParameters(1, 0.89166, 0.05);
+  h[11]->Fit(GaussianFunction2);
+  TF1 *InvMassDiffPKFitFunction = h[11]->GetFunction("GaussianFunction2");
+  h[11]->Draw("H");
+  h[11]->Draw("E,P,SAME");
+
   c4->Print("canvas/myCanvas4.gif");
 
   TCanvas *c5 = new TCanvas("c5", "c5", 10, 20, 1000, 600);
-  TF1 *fU1 = new TF1("fU1", "pol0(0)", 0, 2 * M_PI);  // phi (0,2pi) is x and theta (0,pi) is y
-  fU1->SetParameter(0, M_PI / 2);
-  h2D->Fit(fU1);
-  TF1 *ffU1 = h2D->GetFunction("fU1");
-  h2D->Draw("H");
-  h2D->Draw("E,P,SAME");
-
-  /*
-  std::cout << ffU1->GetChisquare() / ffU1->GetNDF() << std::endl;
-  std::cout << ffU1->GetParameter(0) << " +/- " << ffU1->GetParError(0) << std::endl;
-  std::cout << ffU1->GetParameter(1) << " +/- " << ffU1->GetParError(1) << std::endl;
-  std::cout << ffU1->GetProb() << std::endl << std::endl;
-  */
+  TF1 *UniformFunction = new TF1("UniformFunction", "pol0(0)", 0, 2 * M_PI);  // phi (0,2pi) is x and theta (0,pi) is y
+  UniformFunction->SetParameter(0, M_PI / 2);
+  AngleDistHisto->Fit(UniformFunction);
+  TF1 *AnglesFitFunction = AngleDistHisto->GetFunction("UniformFunction");
+  AngleDistHisto->DrawCopy();
 
   c5->Print("canvas/myCanvas5.gif");
 
@@ -121,15 +124,34 @@ void read() {
 
   std::cout << "Particle Type Histogram information: " << std::endl;
   for (int k{0}; k < 9; ++k) {
-    std::cout << h[0]->GetBinContent(k) / 1.E7 << " +/- " << h[0]->GetBinError(k) / 1.E7 << std::endl;
+    std::cout << "The probability of the " << k << " particle is : " << h[0]->GetBinContent(k) / 1.E7 << " +/- " << h[0]->GetBinError(k) / 1.E7 << std::endl;
   }
   std::cout << std::endl;
 
   std::cout << "Impulse Histogram information: " << std::endl;
-  std::cout << ff1->GetChisquare() / ff1->GetNDF() << std::endl;
-  std::cout << ff1->GetParameter(0) << " +/- " << ff1->GetParError(0) << std::endl;
-  std::cout << ff1->GetParameter(1) << " +/- " << ff1->GetParError(1) << std::endl;
-  std::cout << ff1->GetProb() << std::endl << std::endl;
+  std::cout << "Chisquare / NDF : " << ImpulseFitFunction->GetChisquare() / ImpulseFitFunction->GetNDF() << std::endl;
+  std::cout << "Parameter 0 : " << ImpulseFitFunction->GetParameter(0) << " +/- " << ImpulseFitFunction->GetParError(0) << std::endl;
+  std::cout << "Parameter 1 : " << ImpulseFitFunction->GetParameter(1) << " +/- " << ImpulseFitFunction->GetParError(1) << std::endl;
+  std::cout << "Probability : " << ImpulseFitFunction->GetProb() << std::endl << std::endl;
+
+  std::cout << "Angles Histogram information: " << std::endl;
+  std::cout << "Chisquare / NDF : " << AnglesFitFunction->GetChisquare() / AnglesFitFunction->GetNDF() << std::endl;
+  std::cout << "Parameter 0 : " << AnglesFitFunction->GetParameter(0) << " +/- " << AnglesFitFunction->GetParError(0) << std::endl;
+  std::cout << "Probability : " << AnglesFitFunction->GetProb() << std::endl << std::endl;
+
+  std::cout << "Inv Mass Difference of Charges Histogram information: " << std::endl;
+  std::cout << "Chisquare / NDF : " << InvMassDiffChargesFitFunction->GetChisquare() / InvMassDiffChargesFitFunction->GetNDF() << std::endl;
+  std::cout << "Parameter 0 : " << InvMassDiffChargesFitFunction->GetParameter(0) << " +/- " << InvMassDiffChargesFitFunction->GetParError(0) << std::endl;
+  std::cout << "Parameter 1 : " << InvMassDiffChargesFitFunction->GetParameter(1) << " +/- " << InvMassDiffChargesFitFunction->GetParError(1) << std::endl;
+  std::cout << "Parameter 2 : " << InvMassDiffChargesFitFunction->GetParameter(2) << " +/- " << InvMassDiffChargesFitFunction->GetParError(2) << std::endl;
+  std::cout << "Probability : " << InvMassDiffChargesFitFunction->GetProb() << std::endl << std::endl;
+
+  std::cout << "Inv Mass Difference of Pion/Kaon Histogram information: " << std::endl;
+  std::cout << "Chisquare / NDF : " << InvMassDiffPKFitFunction->GetChisquare() / InvMassDiffPKFitFunction->GetNDF() << std::endl;
+  std::cout << "Parameter 0 : " << InvMassDiffPKFitFunction->GetParameter(0) << " +/- " << InvMassDiffPKFitFunction->GetParError(0) << std::endl;
+  std::cout << "Parameter 1 : " << InvMassDiffPKFitFunction->GetParameter(1) << " +/- " << InvMassDiffPKFitFunction->GetParError(1) << std::endl;
+  std::cout << "Parameter 2 : " << InvMassDiffPKFitFunction->GetParameter(2) << " +/- " << InvMassDiffPKFitFunction->GetParError(2) << std::endl;
+  std::cout << "Probability : " << InvMassDiffPKFitFunction->GetProb() << std::endl << std::endl;
 
   file->Close();
 }
