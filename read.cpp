@@ -52,7 +52,7 @@ void read() {
 
   c1->cd(2);
   TF1 *ExpFunction = new TF1("ExpFunction", "expo(0)", 0, 5);
-  ExpFunction->SetParameters(0, 1);
+  ExpFunction->SetParameters(0, -1);
   h[1]->Fit("ExpFunction");
   TF1 *ImpulseFitFunction = h[1]->GetFunction("ExpFunction");
   h[1]->Draw("H");

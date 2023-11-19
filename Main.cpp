@@ -3,8 +3,8 @@
 #include <TH2D.h>
 
 #include <cmath>
-#include "TFile.h"
 
+#include "TFile.h"
 #include "TROOT.h"
 #include "TRandom.h"
 #include "particle.hpp"
@@ -99,121 +99,177 @@ int Main() {
 
       EnergyHisto->Fill(P.GetEnergy());
 
-      if (P.GetIndex() != 6) {  // Here we are discarding the case the Particle is K*
+      if (P.GetIndex() == 6) {  // Here we are discarding the case the Particle is K*
+        continue;
+      }
+      //--------------------------------------------------------------
+      // InvMass for all the cases of a single event Histogram Filling
+      //--------------------------------------------------------------
 
-        //--------------------------------------------------------------
-        // InvMass for all the cases of a single event Histogram Filling
-        //--------------------------------------------------------------
+      for (int k{0}; k < j; ++k) {                // this goes for the first non-empty part of the array
+        if (EventParticles[k].GetIndex() == 6) {  // Here we are excluding K* particles already in the array
+          continue;
+        }
+        double InvMass = P.InvMass(EventParticles[k]);
 
-        for (int k{0}; k < j; ++k) {                // this goes for the first non-empty part of the array
-          if (EventParticles[k].GetIndex() != 6) {  // Here we are excluding K* particles already in the array
+        InvMassHisto->Fill(InvMass);
 
-            double InvMass = P.InvMass(EventParticles[k]);
-
-            InvMassHisto->Fill(InvMass);
-
-            if (EventParticles[k].GetCharge() != P.GetCharge())  // different charge
-            {
-              InvMassDiscChargesHisto->Fill(InvMass);
-            } else  // same charge
-            {
-              InvMassConcChargesHisto->Fill(InvMass);
-            }
-
-            int kIndex = EventParticles[k].GetIndex();
-
-            switch (kIndex) {
-              case 0:                     // pion+
-                if (P.GetIndex() == 2) {  // kaon+
-                  InvMassCPKHisto->Fill(InvMass);
-                } else if (P.GetIndex() == 3) {  // kaon-
-                  InvMassDPKHisto->Fill(InvMass);
-                }
-                break;
-              case 1:                     // pion-
-                if (P.GetIndex() == 2) {  // kaon+
-                  InvMassDPKHisto->Fill(InvMass);
-                } else if (P.GetIndex() == 3) {  // kaon-
-                  InvMassCPKHisto->Fill(InvMass);
-                }
-                break;
-              case 2:                     // kaon+
-                if (P.GetIndex() == 0) {  // pion+
-                  InvMassCPKHisto->Fill(InvMass);
-                } else if (P.GetIndex() == 1) {  // pion-
-                  InvMassDPKHisto->Fill(InvMass);
-                }
-                break;
-              case 3:                     // kaon-
-                if (P.GetIndex() == 0) {  // pion+
-                  InvMassDPKHisto->Fill(InvMass);
-                } else if (P.GetIndex() == 1) {  // pion-
-                  InvMassCPKHisto->Fill(InvMass);
-                }
-                break;
-              default:
-                if(!(kIndex == 5 || kIndex == 4))
-                throw std::runtime_error("Particle index is not in the expected range 1");
-            }
-          }
+        if (EventParticles[k].GetCharge() != P.GetCharge())  // different charge
+        {
+          InvMassDiscChargesHisto->Fill(InvMass);
+        } else  // same charge
+        {
+          InvMassConcChargesHisto->Fill(InvMass);
         }
 
-        for (int k{100}; k < (100 + NResonanceDaughters); ++k) {  // this goes for the resonance daughters
-          double InvMass = P.InvMass(EventParticles[k]);
+        int kIndex = EventParticles[k].GetIndex();  // TO DELETE IN EACH APPEARENCE
 
-          InvMassHisto->Fill(InvMass);
-
-          if (EventParticles[k].GetCharge() != P.GetCharge())  // different charge
-          {
-            InvMassDiscChargesHisto->Fill(InvMass);
-          } else  // same charge
-          {
-            InvMassConcChargesHisto->Fill(InvMass);
-          }
-
-          int kIndex = EventParticles[k].GetIndex();
-
-          switch (kIndex) {
-            case 0:                     // pion+
-              if (P.GetIndex() == 2) {  // kaon+
-                InvMassCPKHisto->Fill(InvMass);
-              } else if (P.GetIndex() == 3) {  // kaon-
-                InvMassDPKHisto->Fill(InvMass);
-              }
-              break;
-            case 1:                     // pion-
-              if (P.GetIndex() == 2) {  // kaon+
-                InvMassDPKHisto->Fill(InvMass);
-              } else if (P.GetIndex() == 3) {  // kaon-
-                InvMassCPKHisto->Fill(InvMass);
-              }
-              break;
-            case 2:                     // kaon+
-              if (P.GetIndex() == 0) {  // pion+
-                InvMassCPKHisto->Fill(InvMass);
-              } else if (P.GetIndex() == 1) {  // pion-
-                InvMassDPKHisto->Fill(InvMass);
-              }
-              break;
-            case 3:                     // kaon-
-              if (P.GetIndex() == 0) {  // pion+
-                InvMassDPKHisto->Fill(InvMass);
-              } else if (P.GetIndex() == 1) {  // pion-
-                InvMassCPKHisto->Fill(InvMass);
-              }
-              break;
-            default:
-              if(!(kIndex == 5 || kIndex == 4))
-              throw std::runtime_error("Particle index is not in the expected range 2");
-          }
+        switch (kIndex) {
+          case 0:                     // pion+
+            if (P.GetIndex() == 2) {  // kaon+
+              InvMassCPKHisto->Fill(InvMass);
+            } else if (P.GetIndex() == 3) {  // kaon-
+              InvMassDPKHisto->Fill(InvMass);
+            }
+            break;
+          case 1:                     // pion-
+            if (P.GetIndex() == 2) {  // kaon+
+              InvMassDPKHisto->Fill(InvMass);
+            } else if (P.GetIndex() == 3) {  // kaon-
+              InvMassCPKHisto->Fill(InvMass);
+            }
+            break;
+          case 2:                     // kaon+
+            if (P.GetIndex() == 0) {  // pion+
+              InvMassCPKHisto->Fill(InvMass);
+            } else if (P.GetIndex() == 1) {  // pion-
+              InvMassDPKHisto->Fill(InvMass);
+            }
+            break;
+          case 3:                     // kaon-
+            if (P.GetIndex() == 0) {  // pion+
+              InvMassDPKHisto->Fill(InvMass);
+            } else if (P.GetIndex() == 1) {  // pion-
+              InvMassCPKHisto->Fill(InvMass);
+            }
+            break;
+          default:
+            if (!(kIndex == 5 || kIndex == 4)) throw std::runtime_error("Particle index is not in the expected range 1");
         }
-        // end of pion+/-/kaon+/- combinations
+      }
+
+      for (int k{100}; k < (100 + NResonanceDaughters); ++k) {  // this goes for the resonance daughters
+        double InvMass = P.InvMass(EventParticles[k]);
+
+        InvMassHisto->Fill(InvMass);
+
+        if (EventParticles[k].GetCharge() != P.GetCharge())  // different charge
+        {
+          InvMassDiscChargesHisto->Fill(InvMass);
+        } else  // same charge
+        {
+          InvMassConcChargesHisto->Fill(InvMass);
+        }
+
+        int kIndex = EventParticles[k].GetIndex();
+
+        switch (kIndex) {
+          case 0:                     // pion+
+            if (P.GetIndex() == 2) {  // kaon+
+              InvMassCPKHisto->Fill(InvMass);
+            } else if (P.GetIndex() == 3) {  // kaon-
+              InvMassDPKHisto->Fill(InvMass);
+            }
+            break;
+          case 1:                     // pion-
+            if (P.GetIndex() == 2) {  // kaon+
+              InvMassDPKHisto->Fill(InvMass);
+            } else if (P.GetIndex() == 3) {  // kaon-
+              InvMassCPKHisto->Fill(InvMass);
+            }
+            break;
+          case 2:                     // kaon+
+            if (P.GetIndex() == 0) {  // pion+
+              InvMassCPKHisto->Fill(InvMass);
+            } else if (P.GetIndex() == 1) {  // pion-
+              InvMassDPKHisto->Fill(InvMass);
+            }
+            break;
+          case 3:                     // kaon-
+            if (P.GetIndex() == 0) {  // pion+
+              InvMassDPKHisto->Fill(InvMass);
+            } else if (P.GetIndex() == 1) {  // pion-
+              InvMassCPKHisto->Fill(InvMass);
+            }
+            break;
+          default:
+            if (!(kIndex == 5 || kIndex == 4)) throw std::runtime_error("Particle index is not in the expected range 2");
+        }
+      }
+      // end of pion+/-/kaon+/- combinations
+    }
+
+    //--------------------------
+    // i-th EVENT IS FINISHED
+    //--------------------------
+
+    for (int k{100}; k < (100 + NResonanceDaughters); ++k) {    // this goes for the each resonance daughter...
+      for (int n{100}; n < (100 + NResonanceDaughters); ++n) {  // combined between themselves
+        if (n == k) {                                           //  We are not combining a particle with itself
+          continue;
+        }
+        double InvMass = EventParticles[n].InvMass(EventParticles[k]);
+
+        InvMassHisto->Fill(InvMass);
+
+        if (EventParticles[k].GetCharge() != EventParticles[n].GetCharge())  // different charge
+        {
+          InvMassDiscChargesHisto->Fill(InvMass);
+        } else  // same charge
+        {
+          InvMassConcChargesHisto->Fill(InvMass);
+        }
+
+        int kIndex = EventParticles[k].GetIndex();
+
+        switch (kIndex) {
+          case 0:                                     // pion+
+            if (EventParticles[n].GetIndex() == 2) {  // kaon+
+              InvMassCPKHisto->Fill(InvMass);
+            } else if (EventParticles[n].GetIndex() == 3) {  // kaon-
+              InvMassDPKHisto->Fill(InvMass);
+            }
+            break;
+          case 1:                                     // pion-
+            if (EventParticles[n].GetIndex() == 2) {  // kaon+
+              InvMassDPKHisto->Fill(InvMass);
+            } else if (EventParticles[n].GetIndex() == 3) {  // kaon-
+              InvMassCPKHisto->Fill(InvMass);
+            }
+            break;
+          case 2:                                     // kaon+
+            if (EventParticles[n].GetIndex() == 0) {  // pion+
+              InvMassCPKHisto->Fill(InvMass);
+            } else if (EventParticles[n].GetIndex() == 1) {  // pion-
+              InvMassDPKHisto->Fill(InvMass);
+            }
+            break;
+          case 3:                                     // kaon-
+            if (EventParticles[n].GetIndex() == 0) {  // pion+
+              InvMassDPKHisto->Fill(InvMass);
+            } else if (EventParticles[n].GetIndex() == 1) {  // pion-
+              InvMassCPKHisto->Fill(InvMass);
+            }
+            break;
+          default:
+            if (!(kIndex == 5 || kIndex == 4)) throw std::runtime_error("Particle index is not in the expected range 3");
+        }
       }
     }
 
-    //--------------------------------------------------------------------
-    // Now we combine daughters of decay, ONLY AFTER THE EVENT IS FINISHED
-    //--------------------------------------------------------------------
+    //------------------------------------
+    // Now we combine daughters of decay
+    //------------------------------------
 
     for (int k{100}; k < (100 + NResonanceDaughters); k += 2) {
       double InvMass = EventParticles[k].InvMass(EventParticles[k + 1]);
@@ -221,9 +277,9 @@ int Main() {
       InvMassDecayDaughtersHisto->Fill(InvMass);
     }
   }
-  //---------------------------------------------------
+  //-----------------------------------------------------
   // All histograms filled, particle generation finished
-  //---------------------------------------------------
+  //-----------------------------------------------------
   TFile *file = new TFile("HistogramsFile.root", "ReCreate");
 
   ParticleTypeHisto->Write();
