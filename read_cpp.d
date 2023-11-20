@@ -226,5 +226,11 @@
 ./read_cpp.so: /home/gabri/root/include/TROOT.h
 ./read_cpp.so: /home/gabri/root/include/TRandom.h
 ./read_cpp.so: /home/gabri/root/include/Math/TRandomEngine.h
+./read_cpp.so: /home/gabri/root/include/TLegend.h
+./read_cpp.so: /home/gabri/root/include/TPave.h
+./read_cpp.so: /home/gabri/root/include/TBox.h
+./read_cpp.so: /home/gabri/root/include/TAttText.h
+./read_cpp.so: /home/gabri/root/include/TStyle.h
+./read_cpp.so: /home/gabri/root/include/TColor.h
 ./read_cpp.so: /home/gabri/root/include/RVersion.h /home/gabri/root/include/RConfig.h /home/gabri/root/include/TClass.h /home/gabri/root/include/TDictAttributeMap.h /home/gabri/root/include/TInterpreter.h /home/gabri/root/include/TROOT.h /home/gabri/root/include/TBuffer.h /home/gabri/root/include/TMemberInspector.h /home/gabri/root/include/TError.h /home/gabri/root/include/RtypesImp.h /home/gabri/root/include/TIsAProxy.h /home/gabri/root/include/TFileMergeInfo.h /home/gabri/root/include/TCollectionProxyInfo.h /home/gabri/root/bin/rootcling
 read_cpp__ROOTBUILDVERSION= 6.26/06

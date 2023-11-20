@@ -22,21 +22,22 @@ int Main() {
   Particle EventParticles[120];
 
   TH1D *ParticleTypeHisto = new TH1D("PTH", "Particle Types Distribution", 7, 0, 7);
-  TH2D *AngleHisto = new TH2D("AH", "Angle of momentum Distribution", 1000, 0, 2 * M_PI, 1000, 0, M_PI);  // phi is x and theta is y
+  TH1D *PolarAngleHisto = new TH1D("PAH", "Polar Angle of Momentum Distribution", 10000, 0, M_PI);          // theta angle
+  TH1D *AzimuthalAngleHisto = new TH1D("AAH", "Azimuthal Angle of Momentum Distribution", 10000, 0, 2 * M_PI);  // phi angle
   TH1D *ImpulseHisto = new TH1D("IH", "Momentum Module Distribution", 1000, 0, 5);
   TH1D *TrasverseImpulseHisto = new TH1D("TIH", "Trasversal Momentum Module Distribution", 1000, 0, 3);
   TH1D *EnergyHisto = new TH1D("EH", "Energy Distribution", 1000, 0, 3);
   TH1D *InvMassHisto = new TH1D("IMH", "InvMass Distribution", 1000, 0, 6);
   InvMassHisto->Sumw2();
-  TH1D *InvMassDiscChargesHisto = new TH1D("IMBDCH", "InvMass Distribution between discording charges", 1000, 0, 6);
+  TH1D *InvMassDiscChargesHisto = new TH1D("IMBDCH", "InvMass distribution between discording charges", 1000, 0, 6);
   InvMassDiscChargesHisto->Sumw2();
-  TH1D *InvMassConcChargesHisto = new TH1D("IMBCCH", "InvMass Distribution between concording charges", 1000, 0, 6);
+  TH1D *InvMassConcChargesHisto = new TH1D("IMBCCH", "InvMass distribution between concording charges", 1000, 0, 6);
   InvMassConcChargesHisto->Sumw2();
-  TH1D *InvMassDPKHisto = new TH1D("DPKH", "InvMass Distribution between discording Pions and Kaons", 1000, 0, 6);
+  TH1D *InvMassDPKHisto = new TH1D("DPKH", "InvMass distribution between discording Pions and Kaons", 1000, 0, 6);
   InvMassDPKHisto->Sumw2();
-  TH1D *InvMassCPKHisto = new TH1D("CPKH", "InvMass Distribution between concording Pions and Kaons", 1000, 0, 6);
+  TH1D *InvMassCPKHisto = new TH1D("CPKH", "InvMass distribution between concording Pions and Kaons", 1000, 0, 6);
   InvMassCPKHisto->Sumw2();
-  TH1D *InvMassDecayDaughtersHisto = new TH1D("IMDDH", "InvMass Distribution between daughters of Decay", 100, 0.6, 1.2);
+  TH1D *InvMassDecayDaughtersHisto = new TH1D("IMDDH", "InvMass distribution between daughters of decay", 100, 0.6, 1.2);
   InvMassDecayDaughtersHisto->Sumw2();
 
   gRandom->SetSeed();
@@ -90,7 +91,8 @@ int Main() {
 
       ParticleTypeHisto->Fill(P.GetIndex());
 
-      AngleHisto->Fill(phi, theta);
+      AzimuthalAngleHisto->Fill(phi);
+      PolarAngleHisto->Fill(theta);
 
       ImpulseHisto->Fill(impulse);
 
@@ -122,9 +124,7 @@ int Main() {
           InvMassConcChargesHisto->Fill(InvMass);
         }
 
-        int kIndex = EventParticles[k].GetIndex();  // TO DELETE IN EACH APPEARENCE
-
-        switch (kIndex) {
+        switch (EventParticles[k].GetIndex()) {
           case 0:                     // pion+
             if (P.GetIndex() == 2) {  // kaon+
               InvMassCPKHisto->Fill(InvMass);
@@ -154,7 +154,7 @@ int Main() {
             }
             break;
           default:
-            if (!(kIndex == 5 || kIndex == 4)) throw std::runtime_error("Particle index is not in the expected range 1");
+            if (!(EventParticles[k].GetIndex() == 5 || EventParticles[k].GetIndex())) throw std::runtime_error("Particle index is not in the expected range 1");
         }
       }
 
@@ -171,9 +171,7 @@ int Main() {
           InvMassConcChargesHisto->Fill(InvMass);
         }
 
-        int kIndex = EventParticles[k].GetIndex();
-
-        switch (kIndex) {
+        switch (EventParticles[k].GetIndex()) {
           case 0:                     // pion+
             if (P.GetIndex() == 2) {  // kaon+
               InvMassCPKHisto->Fill(InvMass);
@@ -203,7 +201,7 @@ int Main() {
             }
             break;
           default:
-            if (!(kIndex == 5 || kIndex == 4)) throw std::runtime_error("Particle index is not in the expected range 2");
+            if (!(EventParticles[k].GetIndex() == 5 || EventParticles[k].GetIndex() == 4)) throw std::runtime_error("Particle index is not in the expected range 2");
         }
       }
       // end of pion+/-/kaon+/- combinations
@@ -230,9 +228,7 @@ int Main() {
           InvMassConcChargesHisto->Fill(InvMass);
         }
 
-        int kIndex = EventParticles[k].GetIndex();
-
-        switch (kIndex) {
+        switch (EventParticles[k].GetIndex()) {
           case 0:                                     // pion+
             if (EventParticles[n].GetIndex() == 2) {  // kaon+
               InvMassCPKHisto->Fill(InvMass);
@@ -262,7 +258,7 @@ int Main() {
             }
             break;
           default:
-            if (!(kIndex == 5 || kIndex == 4)) throw std::runtime_error("Particle index is not in the expected range 3");
+            if (!(EventParticles[k].GetIndex() == 5 || EventParticles[k].GetIndex() == 4)) throw std::runtime_error("Particle index is not in the expected range 3");
         }
       }
     }
@@ -283,7 +279,8 @@ int Main() {
   TFile *file = new TFile("HistogramsFile.root", "ReCreate");
 
   ParticleTypeHisto->Write();
-  AngleHisto->Write();
+  AzimuthalAngleHisto->Write();
+  PolarAngleHisto->Write();
   ImpulseHisto->Write();
   TrasverseImpulseHisto->Write();
   EnergyHisto->Write();
