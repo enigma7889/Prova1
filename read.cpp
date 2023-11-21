@@ -7,11 +7,11 @@
 
 #include "TCanvas.h"
 #include "TF1.h"
+#include "TLegend.h"
 #include "TMath.h"
 #include "TROOT.h"
 #include "TRandom.h"
 #include "TString.h"
-#include "TLegend.h"
 #include "TStyle.h"
 
 void read() {
@@ -27,10 +27,12 @@ void read() {
 
   for (int j{0}; j < 12; ++j) {
     h[j] = (TH1D *)file->Get(s[j]);
-    h[j]->GetYaxis()->SetTitleOffset(1.2);
+    h[j]->GetYaxis()->SetTitleOffset(1.4);
     h[j]->GetXaxis()->SetTitleSize(0.04);
     h[j]->GetYaxis()->SetTitleSize(0.04);
     h[j]->GetYaxis()->SetTitle("Entries");
+    h[j]->SetFillColor(kGreen);
+    h[j]->SetFillStyle(3003);
   }
 
   TH1D *DiffDiscConcChargesHisto = new TH1D("DiffDiscConcChargesHisto", "difference of discording and concording charges", 1000, 0, 6);
@@ -51,11 +53,13 @@ void read() {
   c1->Divide(2, 2);
 
   c1->cd(1);  // Particle Types
+  gStyle->SetOptStat(10);
   h[0]->GetXaxis()->SetTitle("Particle Index");
   h[0]->Draw("H");
   h[0]->Draw("E,P,SAME");
 
   c1->cd(2);  // Impulse
+  gStyle->SetOptFit(1111);
   TF1 *ExpFunction = new TF1("ExpFunction", "expo(0)", 0, 5);
   ExpFunction->SetParameters(0, -1);
   h[1]->Fit("ExpFunction");
@@ -65,6 +69,7 @@ void read() {
   h[1]->Draw("E,P,SAME");
 
   c1->cd(3);  // Azimuthal angle phi
+  gStyle->SetOptStat(1110);
   TF1 *UniformFunction1 = new TF1("UniformFunction1", "pol0(0)", 0, 2 * M_PI);
   UniformFunction1->SetParameter(0, 1000);
   h[3]->Fit(UniformFunction1);
@@ -86,20 +91,18 @@ void read() {
   c2->Divide(3, 1);
 
   c2->cd(1);  // Inv Mass between Decay Pairs
+  gStyle->SetOptStat(10);
   TF1 *GaussianFunction1 = new TF1("GaussianFunction1", "gaus(0)", 0, 6);
   GaussianFunction1->SetParameters(1, 0.89166, 0.05);
   h[11]->Fit(GaussianFunction1);
   TF1 *InvMassDecayPairsFitFunction = h[11]->GetFunction("GaussianFunction1");
   h[11]->GetYaxis()->SetTitleOffset(1.4);
   h[11]->GetXaxis()->SetTitle("Invariant Mass (GeV/c^2)");
-  
-  gStyle->SetOptStat(112210);
-  gStyle->SetOptFit(111);
   /*
-  TLegend *leg1 = new TLegend(.1,.7,.3,.9,"PALLE1"); 
+  TLegend *leg1 = new TLegend(.1,.7,.3,.9,"1");
   leg1->SetFillColor(0);
-  leg1->AddEntry(h[11],"PALLE2"); 
-  leg1->AddEntry(InvMassDecayPairsFitFunction,"PALLE3"); 
+  leg1->AddEntry(h[11],"2");
+  leg1->AddEntry(InvMassDecayPairsFitFunction,"3");
   leg1->Draw();
   */
   h[11]->Draw("H");
@@ -127,15 +130,14 @@ void read() {
 
   TCanvas *c3 = new TCanvas("c3", "c3", 10, 20, 1200, 500);
   c3->Divide(3, 1);
+  gStyle->SetOptStat(1000000010);
   c3->cd(1);
-  h[2]->Draw("H");
-  h[2]->Draw("E,P,SAME");
+  gStyle->SetOptStat(10);
+  h[2]->Draw("E,P,H");
   c3->cd(2);
-  h[5]->Draw("H");
-  h[5]->Draw("E,P,SAME");
+  h[5]->Draw("E,P,H");
   c3->cd(3);
-  h[6]->Draw("H");
-  h[6]->Draw("E,P,SAME");
+  h[6]->Draw("E,P,H");
 
   c3->Print("canvas/myCanvas3.gif");
 
